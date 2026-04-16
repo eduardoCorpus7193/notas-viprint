@@ -24,14 +24,14 @@ if (!in_array($per_page, $allowed_per_page)) {
 }
 
 $allowed_sort_columns = [
-    'numero_nota' => 'numero_nota',
-    'empresa' => 'empresa',
-    'detalle_cliente' => 'detalle_cliente',
-    'estado' => 'estado',
-    'fecha_nota' => 'fecha_nota',
-    'fecha_recibido' => 'fecha_recibido',
-    'fecha_concluido' => 'fecha_concluido',
-    'id' => 'id'
+    'numero_nota' => 'nt.numero_nota',
+    'empresa' => 'nt.empresa',
+    'detalle_cliente' => 'nt.detalle_cliente',
+    'estado' => 'nt.estado',
+    'fecha_nota' => 'nt.fecha_nota',
+    'fecha_recibido' => 'nt.fecha_recibido',
+    'fecha_concluido' => 'nt.fecha_concluido',
+    'id' => 'nt.id'
 ];
 
 if (!array_key_exists($sort, $allowed_sort_columns)) {
@@ -50,10 +50,10 @@ $types = "";
 
 if (!empty($busqueda)) {
     $where .= " AND (
-        numero_nota LIKE ?
-        OR detalle_cliente LIKE ?
-        OR telefono_cliente LIKE ?
-        OR observaciones LIKE ?
+        nt.numero_nota LIKE ?
+        OR nt.detalle_cliente LIKE ?
+        OR nt.telefono_cliente LIKE ?
+        OR nt.observaciones LIKE ?
     )";
     $busqueda_like = "%" . $busqueda . "%";
     $params[] = $busqueda_like;
@@ -64,38 +64,47 @@ if (!empty($busqueda)) {
 }
 
 if (!empty($empresa)) {
-    $where .= " AND empresa = ?";
+    $where .= " AND nt.empresa = ?";
     $params[] = $empresa;
     $types .= "s";
 }
 
 if (!empty($estado)) {
-    $where .= " AND estado = ?";
+    $where .= " AND nt.estado = ?";
     $params[] = $estado;
     $types .= "s";
 }
 
 if (!empty($fecha_nota)) {
-    $where .= " AND fecha_nota = ?";
+    $where .= " AND nt.fecha_nota = ?";
     $params[] = $fecha_nota;
     $types .= "s";
 }
 
 if (!empty($fecha_recibido)) {
-    $where .= " AND fecha_recibido = ?";
+    $where .= " AND nt.fecha_recibido = ?";
     $params[] = $fecha_recibido;
     $types .= "s";
 }
 
 if (!empty($fecha_concluido)) {
-    $where .= " AND fecha_concluido = ?";
+    $where .= " AND nt.fecha_concluido = ?";
     $params[] = $fecha_concluido;
     $types .= "s";
 }
 
 $filtros_activos = !empty($empresa) || !empty($estado) || !empty($fecha_nota) || !empty($fecha_recibido) || !empty($fecha_concluido);
 
-$sql_total = "SELECT COUNT(*) as total FROM notas_trabajo" . $where;
+/*
+|--------------------------------------------------------------------------
+| TOTAL DE FILAS
+|--------------------------------------------------------------------------
+*/
+$sql_total = "SELECT COUNT(DISTINCT nt.id) as total
+              FROM notas_trabajo nt
+              LEFT JOIN detalle_imagen di ON di.id_notas_trabajo = nt.id"
+    . $where;
+
 $stmt_total = $conn->prepare($sql_total);
 
 if (!$stmt_total) {
@@ -113,7 +122,21 @@ $total_paginas = max(1, ceil($total_filas / $per_page));
 
 $order_by = $allowed_sort_columns[$sort];
 
-$sql = "SELECT * FROM notas_trabajo" . $where . " ORDER BY $order_by $direction LIMIT ? OFFSET ?";
+/*
+|--------------------------------------------------------------------------
+| CONSULTA PRINCIPAL
+|--------------------------------------------------------------------------
+*/
+$sql = "SELECT
+            nt.*,
+            COUNT(di.id) AS total_tamanos
+        FROM notas_trabajo nt
+        LEFT JOIN detalle_imagen di ON di.id_notas_trabajo = nt.id"
+    . $where . "
+        GROUP BY nt.id
+        ORDER BY $order_by $direction
+        LIMIT ? OFFSET ?";
+
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
@@ -160,7 +183,7 @@ function sortIcon($currentSort, $column, $currentDirection)
 <body data-filters-active="<?php echo $filtros_activos ? '1' : '0'; ?>">
     <?php include 'includes/navbar.php'; ?>
 
-    <div class="container-fluid my-5 px-4 px-md-5">
+    <div class="container-fluid my-5 px-4 px-xl-5">
         <div class="card shadow-sm border-0 rounded-4 main-card">
             <div class="card-body p-4 p-md-5">
                 <div class="page-accent"></div>
@@ -173,7 +196,7 @@ function sortIcon($currentSort, $column, $currentDirection)
 
                     <div class="d-flex gap-2 flex-wrap">
                         <button type="button" id="toggleFiltersBtn" class="btn btn-dark-soft filters-toggle-btn">
-                            Mostrar filtros avanzados
+                            Mostrar filtros
                         </button>
                         <a href="modules/notas/create.php" class="btn btn-pink">
                             <i class="bi bi-plus-lg"></i> Nueva nota
@@ -212,7 +235,7 @@ function sortIcon($currentSort, $column, $currentDirection)
 
                         <div class="col-md-8">
                             <input type="text" name="busqueda" class="form-control"
-                                placeholder="Buscar por número de nota, cliente, teléfono u observaciones..."
+                                placeholder="Buscar por número de nota, cliente/pedido, teléfono u observaciones..."
                                 value="<?php echo htmlspecialchars($busqueda); ?>">
                         </div>
 
@@ -353,7 +376,8 @@ function sortIcon($currentSort, $column, $currentDirection)
                                     <th>
                                         <a class="table-sort-link"
                                             href="index.php?<?php echo buildQuery(['sort' => 'detalle_cliente', 'direction' => nextDirection($sort, 'detalle_cliente', $direction), 'pagina' => 1]); ?>">
-                                            Cliente <?php echo sortIcon($sort, 'detalle_cliente', $direction); ?>
+                                            Cliente / pedido
+                                            <?php echo sortIcon($sort, 'detalle_cliente', $direction); ?>
                                         </a>
                                     </th>
                                     <th>Teléfono</th>
@@ -394,8 +418,6 @@ function sortIcon($currentSort, $column, $currentDirection)
                                             <td class="table-date-muted"><?php echo formatearFecha($nota['fecha_nota']); ?></td>
                                             <td class="table-date-muted"><?php echo formatearFecha($nota['fecha_recibido']); ?>
                                             </td>
-                                            <td class="table-date-muted"><?php echo formatearFecha($nota['fecha_concluido']); ?>
-                                            </td>
                                             <td>
                                                 <div class="actions-group">
                                                     <a href="modules/notas/show.php?id=<?php echo $nota['id']; ?>"
@@ -416,7 +438,7 @@ function sortIcon($currentSort, $column, $currentDirection)
                                     <?php endwhile; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted">
+                                        <td colspan="10" class="text-center text-muted">
                                             No se encontraron notas con esos criterios.
                                         </td>
                                     </tr>

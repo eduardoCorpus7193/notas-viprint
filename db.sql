@@ -13,7 +13,8 @@ CREATE TABLE notas_trabajo (
     fecha_concluido DATE NULL,
     estado ENUM('pendiente', 'en_proceso', 'terminado', 'entregado', 'cancelado') NOT NULL DEFAULT 'pendiente',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uq_numero_nota UNIQUE (numero_nota)
 );
 
 CREATE TABLE detalle_imagen (
