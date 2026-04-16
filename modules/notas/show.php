@@ -67,9 +67,16 @@ if (!$nota) {
                     <h1 class="mb-1">Detalle de la nota</h1>
                     <p class="text-muted mb-0">Consulta completa del pedido registrado</p>
                 </div>
-
                 <div class="d-flex gap-2">
-                    <a href="../../index.php" class="btn btn-dark-soft">Volver</a>
+                    <a href="edit.php?id=<?php echo $nota['id']; ?>" class="btn btn-sm btn-pink icon-btn">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </a>
+
+                    <div class="d-flex gap-2">
+                        <a href="../../index.php" class="btn btn-sm btn-dark-soft icon-btn">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -87,7 +94,7 @@ if (!$nota) {
                         </p>
 
                         <p><strong>Nombre del cliente:</strong><br>
-                            <?php echo htmlspecialchars($nota['nombre_cliente']); ?>
+                            <?php echo htmlspecialchars($nota['detalle_cliente']); ?>
                         </p>
 
                         <p class="mb-0"><strong>Teléfono:</strong><br>

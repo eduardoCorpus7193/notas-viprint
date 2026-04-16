@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
     $numero_nota = trim($_POST['numero_nota']);
     $empresa = trim($_POST['empresa']);
-    $nombre_cliente = trim($_POST['nombre_cliente']);
+    $detalle_cliente = trim($_POST['detalle_cliente']);
     $telefono_cliente = trim($_POST['telefono_cliente']);
     $observaciones = trim($_POST['observaciones']);
     $fecha_nota = trim($_POST['fecha_nota']);
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id <= 0 ||
         empty($numero_nota) ||
         empty($empresa) ||
-        empty($nombre_cliente) ||
+        empty($detalle_cliente) ||
         empty($fecha_nota) ||
         empty($fecha_recibido) ||
         empty($estado)
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "UPDATE notas_trabajo SET
                 numero_nota = ?,
                 empresa = ?,
-                nombre_cliente = ?,
+                detalle_cliente = ?,
                 telefono_cliente = ?,
                 observaciones = ?,
                 fecha_nota = ?,
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "sssssssssi",
         $numero_nota,
         $empresa,
-        $nombre_cliente,
+        $detalle_cliente,
         $telefono_cliente,
         $observaciones,
         $fecha_nota,

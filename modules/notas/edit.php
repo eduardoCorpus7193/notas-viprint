@@ -65,13 +65,13 @@ if (!$nota) {
                 </div>
 
                 <div class="col-md-6">
-                    <label for="nombre_cliente" class="form-label fw-semibold">Nombre del cliente *</label>
+                    <label for="detalle_cliente" class="form-label fw-semibold">Nombre del cliente *</label>
                     <input
                         type="text"
                         class="form-control"
-                        id="nombre_cliente"
-                        name="nombre_cliente"
-                        value="<?php echo htmlspecialchars($nota['nombre_cliente']); ?>"
+                        id="detalle_cliente"
+                        name="detalle_cliente"
+                        value="<?php echo htmlspecialchars($nota['detalle_cliente']); ?>"
                         required>
                 </div>
 

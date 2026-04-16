@@ -2,7 +2,7 @@
 
 $host = 'localhost';
 $user = 'root';
-$password = 'admin';
+$password = '';
 $database = 'viprint_notas';
 
 $conn = new mysqli($host, $user, $password, $database);

@@ -26,7 +26,7 @@ if (!in_array($per_page, $allowed_per_page)) {
 $allowed_sort_columns = [
     'numero_nota' => 'numero_nota',
     'empresa' => 'empresa',
-    'nombre_cliente' => 'nombre_cliente',
+    'detalle_cliente' => 'detalle_cliente',
     'estado' => 'estado',
     'fecha_nota' => 'fecha_nota',
     'fecha_recibido' => 'fecha_recibido',
@@ -51,7 +51,7 @@ $types = "";
 if (!empty($busqueda)) {
     $where .= " AND (
         numero_nota LIKE ?
-        OR nombre_cliente LIKE ?
+        OR detalle_cliente LIKE ?
         OR telefono_cliente LIKE ?
         OR observaciones LIKE ?
     )";
@@ -352,8 +352,8 @@ function sortIcon($currentSort, $column, $currentDirection)
                                     </th>
                                     <th>
                                         <a class="table-sort-link"
-                                            href="index.php?<?php echo buildQuery(['sort' => 'nombre_cliente', 'direction' => nextDirection($sort, 'nombre_cliente', $direction), 'pagina' => 1]); ?>">
-                                            Cliente <?php echo sortIcon($sort, 'nombre_cliente', $direction); ?>
+                                            href="index.php?<?php echo buildQuery(['sort' => 'detalle_cliente', 'direction' => nextDirection($sort, 'detalle_cliente', $direction), 'pagina' => 1]); ?>">
+                                            Cliente <?php echo sortIcon($sort, 'detalle_cliente', $direction); ?>
                                         </a>
                                     </th>
                                     <th>Teléfono</th>
@@ -375,13 +375,6 @@ function sortIcon($currentSort, $column, $currentDirection)
                                             Fecha recibido <?php echo sortIcon($sort, 'fecha_recibido', $direction); ?>
                                         </a>
                                     </th>
-                                    <th>
-                                        <a class="table-sort-link"
-                                            href="index.php?<?php echo buildQuery(['sort' => 'fecha_concluido', 'direction' => nextDirection($sort, 'fecha_concluido', $direction), 'pagina' => 1]); ?>">
-                                            Fecha concluido
-                                            <?php echo sortIcon($sort, 'fecha_concluido', $direction); ?>
-                                        </a>
-                                    </th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -391,7 +384,7 @@ function sortIcon($currentSort, $column, $currentDirection)
                                         <tr>
                                             <td><?php echo htmlspecialchars($nota['numero_nota']); ?></td>
                                             <td><?php echo htmlspecialchars($nota['empresa']); ?></td>
-                                            <td><?php echo htmlspecialchars($nota['nombre_cliente']); ?></td>
+                                            <td><?php echo htmlspecialchars($nota['detalle_cliente']); ?></td>
                                             <td><?php echo htmlspecialchars($nota['telefono_cliente']); ?></td>
                                             <td>
                                                 <span class="badge-status <?php echo claseEstado($nota['estado']); ?>">

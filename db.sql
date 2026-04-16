@@ -5,7 +5,7 @@ CREATE TABLE notas_trabajo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_nota VARCHAR(50) NOT NULL,
     empresa ENUM('ViPrint', 'Imagen') NOT NULL,
-    nombre_cliente VARCHAR(150) NOT NULL,
+    detalle_cliente VARCHAR(300) NOT NULL,
     telefono_cliente VARCHAR(20),
     observaciones TEXT,
     fecha_nota DATE NOT NULL,
@@ -16,10 +16,22 @@ CREATE TABLE notas_trabajo (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE detalle_imagen (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tamano ENUM('Grande IMG 3.2', 'Mediana IMG 2.7', 'Jumbo IMG 3.4', 'Otro') NOT NULL DEFAULT 'Otro',
+    detalles VARCHAR(100),
+    id_notas_trabajo INT NOT NULL,
+    CONSTRAINT fk_detalle_imagen_nota
+        FOREIGN KEY (id_notas_trabajo)
+        REFERENCES notas_trabajo(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 INSERT INTO notas_trabajo (
     numero_nota,
     empresa,
-    nombre_cliente,
+    detalle_cliente,
     telefono_cliente,
     observaciones,
     fecha_nota,
