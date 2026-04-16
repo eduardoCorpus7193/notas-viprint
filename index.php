@@ -373,7 +373,7 @@ function sortIcon($currentSort, $column, $currentDirection)
                                             Empresa <?php echo sortIcon($sort, 'empresa', $direction); ?>
                                         </a>
                                     </th>
-                                    <th>
+                                    <th class="col-cliente">
                                         <a class="table-sort-link"
                                             href="index.php?<?php echo buildQuery(['sort' => 'detalle_cliente', 'direction' => nextDirection($sort, 'detalle_cliente', $direction), 'pagina' => 1]); ?>">
                                             Cliente / pedido
@@ -408,7 +408,7 @@ function sortIcon($currentSort, $column, $currentDirection)
                                         <tr>
                                             <td><?php echo htmlspecialchars($nota['numero_nota']); ?></td>
                                             <td><?php echo htmlspecialchars($nota['empresa']); ?></td>
-                                            <td><?php echo htmlspecialchars($nota['detalle_cliente']); ?></td>
+                                            <td class="col-cliente"><?php echo htmlspecialchars($nota['detalle_cliente']); ?></td>
                                             <td><?php echo htmlspecialchars($nota['telefono_cliente']); ?></td>
                                             <td>
                                                 <span class="badge-status <?php echo claseEstado($nota['estado']); ?>">

@@ -175,7 +175,7 @@ if ($nota['empresa'] === 'Imagen') {
                                 <?php endif; ?>
                             </div>
                         </div>
-                    <?php endif; ?>F
+                    <?php endif; ?>
                 </div>
 
             </div>

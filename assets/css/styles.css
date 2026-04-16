@@ -497,3 +497,8 @@ textarea.form-control {
     background-color: #f1e5ff;
     color: #6a35b1;
 }
+
+.col-cliente {
+    white-space: normal !important;
+    word-break: break-word;
+}
